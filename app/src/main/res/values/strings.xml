@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">TooDoo</string>
+    <string name="loading">Loading …</string>
+    <string name="hint_create_new_task">Create new task …</string>
+    <string name="create_new_task">____Create New Task____</string>
+    <string name="create">Create</string>
+    <string name="hint_task_title">Task title …</string>
+    <string name="hint_task_note">Note …</string>
+    <string name="hint_task_due">Due date ...</string>
+    <string name="create_task">Create Task</string>
+    <string name="error_invalid_task_title">Invalid task title</string>
 </resources>

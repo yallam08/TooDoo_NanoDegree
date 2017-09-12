@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_padding"
+    android:orientation="vertical"
+    tools:context="nano.yallam.toodoo.ui.CreateTaskActivity">
+
+    <EditText
+        android:id="@+id/input_task_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_task_title"/>
+
+    <EditText
+        android:id="@+id/input_task_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:lines="4"
+        android:hint="@string/hint_task_note"/>
+
+    <EditText
+        android:id="@+id/input_task_due"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="datetime"
+        android:layout_marginTop="10dp"
+        android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+        android:hint="@string/hint_task_due"/>
+
+    <Button
+        android:id="@+id/btn_create_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/create_task"/>
+
+</LinearLayout>
