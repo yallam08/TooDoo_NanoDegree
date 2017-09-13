@@ -6,7 +6,7 @@
     <string name="create">Create</string>
     <string name="hint_task_title">Task title …</string>
     <string name="hint_task_note">Note …</string>
-    <string name="hint_task_due">Due date ...</string>
+    <string name="hint_task_due">Due date &amp; time …</string>
     <string name="create_task">Create Task</string>
     <string name="error_invalid_task_title">Invalid task title</string>
 

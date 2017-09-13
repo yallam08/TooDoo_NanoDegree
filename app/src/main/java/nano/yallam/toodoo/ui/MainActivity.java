@@ -90,9 +90,6 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
 
         // Initialize Firebase components
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        // Enable offline capabilities
-        mFirebaseDatabase.setPersistenceEnabled(true);
-
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         mTasksDatabaseReference = mFirebaseDatabase.getReference().child("tasks");
