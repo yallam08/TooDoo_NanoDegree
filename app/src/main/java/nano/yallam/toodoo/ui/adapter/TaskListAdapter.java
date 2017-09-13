@@ -82,4 +82,9 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
         this.tasks.add(task);
         notifyDataSetChanged();
     }
+
+    public void removeTask(Task task) {
+        tasks.remove(task);
+        notifyDataSetChanged();
+    }
 }

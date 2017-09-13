@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -88,12 +90,13 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
 
         // Initialize Firebase components
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        // Enable offline capabilities
+        mFirebaseDatabase.setPersistenceEnabled(true);
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         mTasksDatabaseReference = mFirebaseDatabase.getReference().child("tasks");
 
-        // Enable offline capabilities
-        mFirebaseDatabase.setPersistenceEnabled(true);
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -132,6 +135,8 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
         Map<String, Object> defaultConfigMap = new HashMap<>();
         mFirebaseRemoteConfig.setDefaults(defaultConfigMap);
         fetchConfig();
+
+        showBannerAd();
     }
 
     @Override
@@ -141,8 +146,8 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         if (mAuthStateListener != null) {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
@@ -254,5 +259,14 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
             createTaskIntent.putExtra(EXTRA_TASK_TITLE, taskTitle);
         }
         startActivity(createTaskIntent);
+    }
+
+
+    private void showBannerAd() {
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
     }
 }

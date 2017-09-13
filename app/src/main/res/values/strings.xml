@@ -9,4 +9,6 @@
     <string name="hint_task_due">Due date ...</string>
     <string name="create_task">Create Task</string>
     <string name="error_invalid_task_title">Invalid task title</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>
