@@ -62,6 +62,7 @@
         android:id="@+id/rv_tasks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/adView"
         android:layout_below="@id/ll_create_new_task_container"
         android:paddingRight="@dimen/activity_padding"
         android:paddingLeft="@dimen/activity_padding"/>
@@ -70,7 +71,8 @@
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:visibility="gone"
+        android:layout_margin="5dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         ads:adSize="BANNER"

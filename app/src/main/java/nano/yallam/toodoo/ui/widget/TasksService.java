@@ -59,6 +59,10 @@ public class TasksService extends IntentService {
                         }
 
                         public void onChildRemoved(DataSnapshot dataSnapshot) {
+                            Task task = dataSnapshot.getValue(Task.class);
+                            GridWidgetService.mTasks.remove(task);
+
+                            handleActionUpdateWidgetGrid();
                         }
 
                         public void onChildMoved(DataSnapshot dataSnapshot, String s) {

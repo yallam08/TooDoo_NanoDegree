@@ -3,6 +3,9 @@ package nano.yallam.toodoo.util;
 import android.app.ProgressDialog;
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import nano.yallam.toodoo.R;
 
 public class Utils {
@@ -24,4 +27,19 @@ public class Utils {
         return progressDialog;
     }
 
+    public static String getShortenedText(String txt, int length) {
+        String result;
+        if (txt.length() <= length) {
+            result = txt;
+        } else {
+            result = txt.substring(0, length - 3) + "...";
+        }
+
+        return result;
+    }
+
+    public static String getFriendlyDue(long due) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd");
+        return dateFormat.format(new Date(due));
+    }
 }

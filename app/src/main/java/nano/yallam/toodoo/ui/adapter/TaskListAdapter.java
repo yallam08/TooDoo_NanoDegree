@@ -12,6 +12,7 @@ import java.util.List;
 
 import nano.yallam.toodoo.R;
 import nano.yallam.toodoo.model.Task;
+import nano.yallam.toodoo.util.Utils;
 
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskListAdapterViewHolder> {
@@ -36,11 +37,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
     class TaskListAdapterViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
         final TextView mTaskTitle;
         final TextView mTaskNote;
+        final TextView mTaskDue;
 
         TaskListAdapterViewHolder(View view) {
             super(view);
             mTaskTitle = (TextView) view.findViewById(R.id.task_title);
             mTaskNote = (TextView) view.findViewById(R.id.task_note);
+            mTaskDue = (TextView) view.findViewById(R.id.task_due);
             view.setOnClickListener(this);
         }
 
@@ -64,7 +67,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskLi
     @Override
     public void onBindViewHolder(TaskListAdapterViewHolder viewHolder, int position) {
         viewHolder.mTaskTitle.setText(tasks.get(position).getTitle());
-        viewHolder.mTaskNote.setText(tasks.get(position).getNote());
+        viewHolder.mTaskNote.setText(Utils.getShortenedText(tasks.get(position).getNote(), 10));
+        viewHolder.mTaskDue.setText(Utils.getFriendlyDue(tasks.get(position).getDue()));
     }
 
     @Override

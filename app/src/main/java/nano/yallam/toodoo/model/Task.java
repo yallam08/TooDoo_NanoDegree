@@ -38,4 +38,41 @@ public class Task {
     public void setDue(long due) {
         this.due = due;
     }
+
+
+    /**
+     * Override to easily compare Task objects
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!Task.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final Task other = (Task) obj;
+        if ((this.title == null) ? (other.title != null) : !this.title.equals(other.title)) {
+            return false;
+        }
+        if ((this.note == null) ? (other.note != null) : !this.note.equals(other.note)) {
+            return false;
+        }
+        if (this.due != other.due) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Override to easily compare Task objects
+     */
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.title != null ? this.title.hashCode() : 0);
+        hash = 53 * hash + (this.note != null ? this.note.hashCode() : 0);
+        hash = 53 * hash + (int) this.due;
+        return hash;
+    }
 }

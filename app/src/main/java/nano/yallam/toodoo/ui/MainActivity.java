@@ -7,16 +7,19 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -60,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
     @BindView(R.id.input_create_task)
     EditText mInputCreateTask;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private String mUsername;
 
     // Firebase instance variables
@@ -75,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
 
         if (mProgressDialog == null) {
             mProgressDialog = Utils.generateProgressDialog(this, null, false);
@@ -131,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
         // available. Eg: if an error occurred fetching values from the server.
         Map<String, Object> defaultConfigMap = new HashMap<>();
         mFirebaseRemoteConfig.setDefaults(defaultConfigMap);
-        fetchConfig();
 
         showBannerAd();
     }
@@ -150,6 +156,24 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
         }
         mTaskListAdapter.setTasks(new ArrayList<Task>());
         detachDatabaseReadListener();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sign_out_menu:
+                AuthUI.getInstance().signOut(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -191,6 +215,8 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
                 }
 
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    Task task = dataSnapshot.getValue(Task.class);
+                    mTaskListAdapter.removeTask(task);
                 }
 
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {
@@ -208,33 +234,6 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
             mTasksDatabaseReference.removeEventListener(mChildEventListener);
             mChildEventListener = null;
         }
-    }
-
-    //TODO: refactor for release
-    // Fetch the config to determine the allowed length of messages.
-    public void fetchConfig() {
-        long cacheExpiration = 3600; // 1 hour in seconds
-        // If developer mode is enabled reduce cacheExpiration to 0 so that each fetch goes to the
-        // server. This should not be used in release builds.
-        if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
-            cacheExpiration = 0;
-        }
-        mFirebaseRemoteConfig.fetch(cacheExpiration)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Make the fetched config available
-                        // via FirebaseRemoteConfig get<type> calls, e.g., getLong, getString.
-                        mFirebaseRemoteConfig.activateFetched();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // An error occurred when fetching the config.
-                        Log.w(TAG, "Error fetching config", e);
-                    }
-                });
     }
 
     /**
@@ -260,10 +259,24 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
 
 
     private void showBannerAd() {
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        final AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
-        mAdView.loadAd(adRequest);
+        adView.loadAd(adRequest);
+
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                adView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                adView.setVisibility(View.GONE);
+            }
+        });
     }
 }
