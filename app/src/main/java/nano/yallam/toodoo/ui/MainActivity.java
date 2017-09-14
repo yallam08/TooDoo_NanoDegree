@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        setTitle("");
 
         if (mProgressDialog == null) {
             mProgressDialog = Utils.generateProgressDialog(this, null, false);
