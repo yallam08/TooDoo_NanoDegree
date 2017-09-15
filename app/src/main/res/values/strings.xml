@@ -10,6 +10,9 @@
     <string name="create_task">Create Task</string>
     <string name="error_invalid_task_title">Invalid task title</string>
 
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="sign_out">Sign out</string>
+    <string name="signed_in">Signed in!</string>
+    <string name="sign_in_canceled">Sign in canceled</string>
+    <string name="datetime_format">dd-MM-yyyy hh:mm</string>
 </resources>

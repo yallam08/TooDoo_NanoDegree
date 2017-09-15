@@ -8,9 +8,11 @@ import java.util.Date;
 
 import nano.yallam.toodoo.R;
 
-public class Utils {
+public final class Utils {
 
-    private Utils() {}
+    private Utils() {
+        throw new AssertionError("Can't be instantiated!");
+    }
 
     /**
      * Generate top layer progress indicator.

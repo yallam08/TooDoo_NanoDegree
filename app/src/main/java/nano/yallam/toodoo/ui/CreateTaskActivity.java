@@ -26,6 +26,10 @@ import static nano.yallam.toodoo.ui.MainActivity.EXTRA_TASK_TITLE;
 
 public class CreateTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
+    public static final String STATE_TASK_TITLE_FIELD = "task_title_field_state";
+    public static final String STATE_TASK_NOTE_FIELD = "task_note_field_state";
+    public static final String STATE_TASK_DUE_FIELD = "task_due_field_state";
+
     @BindView(R.id.input_task_title)
     EditText mInputTaskTitle;
     @BindView(R.id.input_task_note)
@@ -41,6 +45,12 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
         ButterKnife.bind(this);
+
+        if (savedInstanceState != null) {
+            mInputTaskTitle.setText(savedInstanceState.getString(STATE_TASK_TITLE_FIELD));
+            mInputTaskNote.setText(savedInstanceState.getString(STATE_TASK_NOTE_FIELD));
+            mInputTaskDue.setText(savedInstanceState.getString(STATE_TASK_DUE_FIELD));
+        }
 
         if (getIntent().hasExtra(EXTRA_TASK_TITLE)) {
             mInputTaskTitle.setText(getIntent().getStringExtra(EXTRA_TASK_TITLE));
@@ -65,6 +75,14 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         mTasksDatabaseReference = mFirebaseDatabase.getReference().child("tasks");
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(STATE_TASK_TITLE_FIELD, mInputTaskTitle.getText().toString());
+        outState.putString(STATE_TASK_NOTE_FIELD, mInputTaskNote.getText().toString());
+        outState.putString(STATE_TASK_DUE_FIELD, mInputTaskDue.getText().toString());
+    }
+
     @OnClick(R.id.btn_create_task)
     public void createTask() {
         String taskTitle = mInputTaskTitle.getText().toString();
@@ -76,7 +94,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         String taskNote = mInputTaskNote.getText().toString();
 
         long taskDue = new Date().getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(getString(R.string.datetime_format));
         try {
             Date parsedDate = dateFormat.parse(mInputTaskDue.getText().toString());
             taskDue = parsedDate.getTime();

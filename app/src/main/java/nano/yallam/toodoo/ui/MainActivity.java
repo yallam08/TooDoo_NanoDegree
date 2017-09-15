@@ -3,6 +3,7 @@ package nano.yallam.toodoo.ui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,11 +55,15 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
 
     public static final String EXTRA_TASK_TITLE = "extra_task_title";
 
+    public static final String STATE_TASKS_RV = "tasks_rv_state";
+    public static final String STATE_CREATE_TASK_FIELD = "create_task_field_state";
+
     private ProgressDialog mProgressDialog;
 
     @BindView(R.id.rv_tasks)
     RecyclerView mTasksRecyclerView;
     private TaskListAdapter mTaskListAdapter;
+    LinearLayoutManager mTasksLayoutManager;
 
     @BindView(R.id.input_create_task)
     EditText mInputCreateTask;
@@ -88,11 +93,16 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
             mProgressDialog = Utils.generateProgressDialog(this, null, false);
         }
 
-        LinearLayoutManager tasksLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mTasksRecyclerView.setLayoutManager(tasksLayoutManager);
+        mTasksLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mTasksRecyclerView.setLayoutManager(mTasksLayoutManager);
         mTaskListAdapter = new TaskListAdapter(this, new ArrayList<Task>(), this);
         mTasksRecyclerView.setAdapter(mTaskListAdapter);
-
+        if(savedInstanceState != null)
+        {
+            Parcelable savedTasksRVState = savedInstanceState.getParcelable(STATE_TASKS_RV);
+            mTasksRecyclerView.getLayoutManager().onRestoreInstanceState(savedTasksRVState);
+            mInputCreateTask.setText(savedInstanceState.getString(STATE_CREATE_TASK_FIELD));
+        }
 
         mUsername = ANONYMOUS;
 
@@ -178,15 +188,22 @@ public class MainActivity extends AppCompatActivity implements TaskListAdapter.T
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(STATE_TASKS_RV, mTasksRecyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putString(STATE_CREATE_TASK_FIELD, mInputCreateTask.getText().toString());
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 // Sign-in succeeded, set up the UI
-                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.signed_in, Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
-                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.sign_in_canceled, Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
